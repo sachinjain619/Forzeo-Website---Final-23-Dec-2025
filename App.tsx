@@ -23,11 +23,13 @@ import {
   Info,
   ShieldCheck,
   Loader2,
-  ExternalLink
+  Lock,
+  Shield
 } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { Button } from './components/Button';
 import { Section } from './components/Section';
+import { WhatsAppButton } from './components/WhatsAppButton';
 import { NAV_LINKS, CORE_FEATURES, PRICING_TIERS, TRUSTED_BRANDS } from './constants';
 
 const CALENDAR_URL = "https://calendar.app.google/FuVTPRuZEUbN9RPj8";
@@ -59,6 +61,96 @@ const TESTIMONIALS = [
     color: "from-amber-400 to-orange-500"
   }
 ];
+
+// --- Verification Gateway Component ---
+const VerificationGateway: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+
+  const handleVerify = () => {
+    setIsVerifying(true);
+    // Simulate a futuristic scan
+    setTimeout(() => {
+      setIsComplete(true);
+      setTimeout(onVerified, 800);
+    }, 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-brand-dark overflow-hidden">
+      <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-brand-indigo/10 blur-[120px] rounded-full pointer-events-none" />
+      
+      <div className="relative z-10 glass-panel p-10 md:p-14 rounded-[2.5rem] border border-white/10 flex flex-col items-center gap-8 max-w-md w-full mx-6 text-center shadow-2xl animate-fade-in-up">
+        <Logo className="scale-125 mb-4" />
+        
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-indigo/10 border border-brand-indigo/30 text-brand-cyan text-[10px] font-bold uppercase tracking-widest">
+            <Shield size={14} />
+            Secure Gateway
+          </div>
+         
+          <p className="text-slate-400 text-sm leading-relaxed">
+            Verify you are human.
+          </p>
+        </div>
+
+        <button 
+          onClick={handleVerify}
+          disabled={isVerifying}
+          className={`relative group w-full p-6 rounded-2xl border transition-all duration-500 flex items-center justify-between overflow-hidden ${
+            isComplete 
+              ? 'bg-emerald-500/10 border-emerald-500/50' 
+              : 'bg-white/5 border-white/10 hover:border-brand-cyan/50 hover:bg-white/10'
+          }`}
+        >
+          {/* Progress bar background */}
+          {isVerifying && !isComplete && (
+            <div className="absolute bottom-0 left-0 h-1 bg-brand-cyan animate-progress" style={{ width: '100%' }} />
+          )}
+
+          <div className="flex items-center gap-4">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-500 ${
+              isComplete 
+                ? 'bg-emerald-500 border-emerald-500 scale-110' 
+                : 'border-white/20 group-hover:border-brand-cyan'
+            }`}>
+              {isComplete ? (
+                <CheckCircle size={20} className="text-white" />
+              ) : isVerifying ? (
+                <Loader2 size={16} className="text-brand-cyan animate-spin" />
+              ) : (
+                <div className="w-2 h-2 rounded-sm bg-white/20 group-hover:bg-brand-cyan transition-colors" />
+              )}
+            </div>
+            <span className={`text-sm font-bold uppercase tracking-widest transition-colors ${isComplete ? 'text-emerald-400' : 'text-slate-400 group-hover:text-white'}`}>
+              {isComplete ? 'Verified' : isVerifying ? 'Verifying...' : 'I am human'}
+            </span>
+          </div>
+          
+          <Lock size={18} className={`transition-opacity duration-300 ${isVerifying ? 'opacity-0' : 'opacity-20'}`} />
+        </button>
+
+        <div className="flex items-center gap-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-40">
+          
+        forzeo.com needs to review the security of your connection before proceeding.
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes progress {
+          from { transform: scaleX(0); transform-origin: left; }
+          to { transform: scaleX(1); transform-origin: left; }
+        }
+        .animate-progress {
+          animation: progress 1.5s linear forwards;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// --- Rest of the Components ---
 
 const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
@@ -94,7 +186,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
     };
 
     try {
-      // mode: 'no-cors' is required for Google Apps Script Web Apps when triggered from direct browser fetch
       await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -104,13 +195,9 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
         },
         body: JSON.stringify(payload),
       });
-
-      // Since 'no-cors' doesn't return response details, we assume success if no network error occurred
       setIsSuccess(true);
-      // Clear form data is handled by the success view or reset logic
     } catch (error) {
       console.error('Submission error:', error);
-      // Show success state anyway to prioritize user experience, as the background task likely triggered
       setIsSuccess(true);
     } finally {
       setIsSubmitting(false);
@@ -135,13 +222,10 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm transition-opacity duration-300"
         onClick={resetAndClose}
       />
-      
-      {/* Modal Card */}
       <div className="relative w-full max-w-lg glass-panel rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0F172A] animate-fade-in-up">
         <button 
           onClick={resetAndClose}
@@ -152,7 +236,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
 
         {!isSuccess ? (
           <div className="p-8 md:p-10">
-            {/* Step Indicators */}
             <div className="flex gap-2 mb-8">
               <div className={`h-1.5 flex-1 rounded-full transition-colors duration-500 ${step >= 1 ? 'bg-blue-500 shadow-[0_0_8px_#3b82f6]' : 'bg-white/10'}`} />
               <div className={`h-1.5 flex-1 rounded-full transition-colors duration-500 ${step >= 2 ? 'bg-blue-500 shadow-[0_0_8px_#3b82f6]' : 'bg-white/10'}`} />
@@ -164,7 +247,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                   <h2 className="text-2xl font-display font-bold text-white mb-2">See How AI Engines Rank Your Brand</h2>
                   <p className="text-slate-400 text-sm">Get a free Generative Engine Optimization (GEO) audit for your brand.</p>
                 </div>
-
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
@@ -200,14 +282,12 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                     />
                   </div>
                 </div>
-
                 <Button 
                   type="submit"
                   className="w-full bg-[#3B82F6] hover:bg-blue-600 text-white font-bold py-4 rounded-xl border-none shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
                   Next: Customize My Audit →
                 </Button>
-                
                 <p className="text-center text-[10px] text-slate-600 font-medium flex items-center justify-center gap-1.5 mt-2">
                   <ShieldCheck size={12} className="opacity-60" />
                   Privacy First: We never spam
@@ -219,7 +299,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                   <h2 className="text-2xl font-display font-bold text-white mb-2">Almost there!</h2>
                   <p className="text-slate-400 text-sm">We need a few details to run the engine.</p>
                 </div>
-
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Top 3 Competitors</label>
@@ -257,7 +336,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                     </select>
                   </div>
                 </div>
-
                 <div className="flex gap-3">
                   <button 
                     type="button"
@@ -275,7 +353,6 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                     {isSubmitting ? <Loader2 className="animate-spin mx-auto" /> : "Generate My Free Audit"}
                   </Button>
                 </div>
-                
                 <p className="text-center text-[10px] text-slate-600 font-medium flex items-center justify-center gap-1.5 mt-2">
                   <ShieldCheck size={12} className="opacity-60" />
                   Privacy First: We never spam
@@ -289,19 +366,14 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                <Cpu className="text-blue-500 animate-pulse" size={32} />
                <div className="absolute inset-0 rounded-full border-2 border-blue-500/50 border-t-transparent animate-spin" />
             </div>
-            
             <div className="space-y-4">
               <h2 className="text-3xl font-display font-bold text-white">Analysis Started!</h2>
-              <p className="text-slate-400 leading-relaxed">
-                We will email your audit shortly.
-              </p>
+              <p className="text-slate-400 leading-relaxed">We will email your audit shortly.</p>
             </div>
-
             <div className="pt-4">
               <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden mb-8">
                 <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-full w-[85%] animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
               </div>
-              
               <Button 
                 onClick={resetAndClose}
                 variant="outline"
@@ -339,7 +411,6 @@ const DashboardMockup: React.FC = () => {
 
   const renderDashboard = () => (
     <div className="space-y-5 h-full flex flex-col overflow-y-auto pr-2 custom-scrollbar">
-      {/* Top Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           { label: 'SHARE OF VOICE (SOV)', val: '6.1%', trend: '+0.2%', trendUp: true },
@@ -368,10 +439,7 @@ const DashboardMockup: React.FC = () => {
           </div>
         ))}
       </div>
-
-      {/* Main Charts Area */}
       <div className="grid lg:grid-cols-3 gap-4">
-        {/* Visibility Trends - 2/3 width */}
         <div className="lg:col-span-2 bg-[#121827] border border-white/5 rounded-xl p-5 flex flex-col h-[240px] overflow-hidden"
           style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: '400ms' }}>
           <div className="flex justify-between items-center mb-8">
@@ -395,8 +463,6 @@ const DashboardMockup: React.FC = () => {
              </svg>
           </div>
         </div>
-
-        {/* Mentions by Category - 1/3 width */}
         <div className="bg-[#121827] border border-white/5 rounded-xl p-5 flex flex-col items-center justify-center h-[240px] overflow-hidden"
           style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: '500ms' }}>
           <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-8 text-center">Mentions by Category</h3>
@@ -413,8 +479,6 @@ const DashboardMockup: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Top 5 Performing Prompts */}
       <div className="bg-[#121827] border border-white/5 rounded-xl p-6 overflow-hidden"
         style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: '600ms' }}>
         <div className="flex justify-between items-center mb-6">
@@ -458,7 +522,6 @@ const DashboardMockup: React.FC = () => {
   const renderCompetitors = () => (
     <div className="space-y-4 h-full flex flex-col overflow-y-auto pr-2 custom-scrollbar">
       <div className="grid lg:grid-cols-2 gap-4">
-        {/* Competitive SOV Card */}
         <div className="bg-[#121827] border border-white/5 rounded-xl p-5 overflow-hidden"
           style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0 }}>
           <div className="mb-6">
@@ -482,8 +545,6 @@ const DashboardMockup: React.FC = () => {
              ))}
           </div>
         </div>
-
-        {/* Sentiment Breakdown Card */}
         <div className="bg-[#121827] border border-white/5 rounded-xl p-5 overflow-hidden"
           style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: '100ms' }}>
           <div className="mb-6">
@@ -506,8 +567,6 @@ const DashboardMockup: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Gap Analysis Table Card */}
       <div className="bg-[#121827] border border-white/5 rounded-xl p-5 flex-1 overflow-hidden"
         style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: '200ms' }}>
         <div className="flex justify-between items-center mb-4">
@@ -552,7 +611,6 @@ const DashboardMockup: React.FC = () => {
 
   return (
     <div className="relative w-full glass-panel rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0B0F19] flex min-h-[540px] animate-fade-in-up">
-      {/* Sidebar */}
       <div className="w-48 border-r border-white/5 bg-[#0D121F] p-4 hidden md:flex flex-col">
         <div className="flex-1 flex flex-col gap-1">
           {sidebarItems.map((item, i) => (
@@ -568,8 +626,6 @@ const DashboardMockup: React.FC = () => {
             </div>
           ))}
         </div>
-        
-        {/* Sidebar Bottom */}
         <div className="pt-4 border-t border-white/5">
           <div className="flex items-center gap-3 px-3 py-2.5 bg-white/2 rounded-xl mb-3 border border-white/5 overflow-hidden">
             <div className="w-8 h-8 rounded-full bg-brand-indigo flex items-center justify-center text-[10px] font-bold text-white shrink-0 shadow-lg border border-white/10">AD</div>
@@ -588,12 +644,9 @@ const DashboardMockup: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Main Content Area */}
       <div className="flex-1 bg-[#0F1524] p-6 lg:p-8 overflow-hidden flex flex-col">
         {activeTab === 'Dashboard' || activeTab === 'Content Gen' ? renderDashboard() : renderCompetitors()}
       </div>
-
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
@@ -621,6 +674,7 @@ const DashboardMockup: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const [isVerified, setIsVerified] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -666,8 +720,12 @@ const App: React.FC = () => {
     setIsAuditModalOpen(true);
   };
 
+  if (!isVerified) {
+    return <VerificationGateway onVerified={() => setIsVerified(true)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-brand-dark text-slate-300 font-sans selection:bg-brand-cyan/30 selection:text-white relative">
+    <div className="min-h-screen bg-brand-dark text-slate-300 font-sans selection:bg-brand-cyan/30 selection:text-white relative animate-fade-in">
       <style>{`
         @keyframes dash {
           to { stroke-dashoffset: 0; }
@@ -675,17 +733,18 @@ const App: React.FC = () => {
         .animate-dash {
           animation: dash 2.5s ease-out forwards;
         }
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in {
+          animation: fade-in 1s ease-out forwards;
+        }
       `}</style>
-
-      {/* Background Elements */}
       <div className="fixed inset-0 bg-grid-pattern opacity-20 pointer-events-none z-0" />
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-hero-glow pointer-events-none z-0" />
-      
-      {/* Decorative Accents */}
       <div className="fixed top-10 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-white/5 blur-[120px] rounded-full pointer-events-none z-0 mix-blend-soft-light" />
       <div className="fixed -top-24 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none z-0 mix-blend-screen" />
-
-      {/* Navigation */}
       <nav 
         className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
           isScrolled 
@@ -695,7 +754,6 @@ const App: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Logo />
-          
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map(link => (
               <a 
@@ -711,7 +769,6 @@ const App: React.FC = () => {
               Get Started
             </Button>
           </div>
-
           <button 
             className="md:hidden text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -719,7 +776,6 @@ const App: React.FC = () => {
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
-
         {isMobileMenuOpen && (
           <div className="absolute top-full left-0 w-full bg-brand-dark border-b border-white/10 p-6 flex flex-col gap-4 md:hidden">
             {NAV_LINKS.map(link => (
@@ -736,8 +792,6 @@ const App: React.FC = () => {
           </div>
         )}
       </nav>
-
-      {/* Hero Section */}
       <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-32 px-6 z-10">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-5 space-y-8">
@@ -748,16 +802,13 @@ const App: React.FC = () => {
               </span>
               The New Standard for GEO
             </div>
-            
             <h1 className="text-5xl lg:text-7xl font-display font-bold text-white leading-tight">
               See How AI Search <br />
               <span className="text-gradient drop-shadow-[0_0_25px_rgba(34,211,238,0.2)]">Talks About You.</span>
             </h1>
-            
             <p className="text-lg text-slate-400 leading-relaxed max-w-lg">
               Unlock visibility across ChatGPT, Gemini, and Perplexity—and get precise strategies to dominate every generated answer.
             </p>
-
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Button 
                 variant="secondary" 
@@ -777,7 +828,6 @@ const App: React.FC = () => {
                 Book a Strategy Call
               </Button>
             </div>
-
             <div className="pt-8 border-t border-white/10">
               <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase mb-4">Trusted by Market Leaders</p>
               <div className="flex flex-wrap gap-8 items-center text-slate-400 font-display font-bold text-lg opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
@@ -787,27 +837,20 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
-
           <div className="lg:col-span-7 relative">
             <DashboardMockup />
-            {/* Background Glow */}
             <div className="absolute -inset-10 bg-brand-indigo/20 blur-[120px] rounded-full -z-10 mix-blend-screen" />
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-brand-cyan/20 blur-[60px] rounded-full -z-10" />
           </div>
         </div>
       </section>
-
-      {/* Problem Section */}
       <Section darker id="problem">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
-            SEO Alone Is Dead.
-          </h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">SEO Alone Is Dead.</h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
             AI assistants answer queries directly, capturing intent without a single click to your site. If you aren't in the training data or citation pool, you're invisible.
           </p>
         </div>
-
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div className="p-8 rounded-2xl bg-white/5 border border-white/5 relative overflow-hidden group hover:border-red-500/30 transition-all">
             <h3 className="text-xl font-bold text-slate-300 mb-6 flex items-center gap-2">
@@ -823,7 +866,6 @@ const App: React.FC = () => {
               ))}
             </ul>
           </div>
-
           <div className="p-8 rounded-2xl bg-gradient-to-br from-brand-indigo/20 to-brand-cyan/10 border border-brand-cyan/20 relative overflow-hidden group">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-cyan shadow-[0_0_10px_#22d3ee]" />
@@ -840,8 +882,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </Section>
-
-      {/* Features Grid */}
       <Section id="features">
         <div className="mb-16">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
@@ -849,7 +889,6 @@ const App: React.FC = () => {
             to own the <span className="text-gradient">AI Response.</span>
           </h2>
         </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {CORE_FEATURES.map((feature, idx) => (
             <div 
@@ -865,24 +904,19 @@ const App: React.FC = () => {
           ))}
         </div>
       </Section>
-
-      {/* Testimonial Slider */}
       <Section darker className="text-center overflow-hidden">
         <div className="relative max-w-5xl mx-auto px-12">
           <button onClick={prevTestimonial} className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full border border-white/10 bg-brand-surface/50 hover:bg-brand-indigo hover:border-brand-indigo transition-all group shadow-lg">
             <ChevronLeft size={24} className="text-slate-400 group-hover:text-white" />
           </button>
-          
           <button onClick={nextTestimonial} className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full border border-white/10 bg-brand-surface/50 hover:bg-brand-indigo hover:border-brand-indigo transition-all group shadow-lg">
             <ChevronRight size={24} className="text-slate-400 group-hover:text-white" />
           </button>
-
           <div className="bg-gradient-to-r from-brand-indigo/10 to-transparent p-1 rounded-3xl">
             <div className="bg-brand-surface p-12 lg:p-16 rounded-3xl relative overflow-hidden glass-panel">
               <div className="absolute top-10 right-10 opacity-5 pointer-events-none">
                 <Quote size={200} className="text-white" />
               </div>
-              
               <div className="relative z-10">
                 {TESTIMONIALS.map((t, idx) => (
                   <div key={idx} className={`transition-all duration-700 absolute inset-0 flex flex-col items-center justify-center ${idx === activeTestimonial ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute pointer-events-none'}`}>
@@ -910,14 +944,11 @@ const App: React.FC = () => {
           </div>
         </div>
       </Section>
-
-      {/* Pricing */}
       <Section id="pricing" darker>
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Simple, Scalable Pricing.</h2>
           <p className="text-slate-400">Start auditing your visibility today.</p>
         </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {PRICING_TIERS.map((tier, idx) => (
             <div key={idx} className={`p-6 rounded-2xl border flex flex-col transition-all duration-300 hover:scale-[1.02] ${tier.recommended ? 'bg-[#121827] border-brand-indigo shadow-[0_0_30px_rgba(79,70,229,0.2)] relative' : 'bg-brand-surface/30 border-white/5'}`}>
@@ -940,8 +971,6 @@ const App: React.FC = () => {
           ))}
         </div>
       </Section>
-
-      {/* Final CTA */}
       <section id="audit" className="relative py-24 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-brand-indigo/10 blur-[120px] rounded-full opacity-50" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -969,8 +998,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
       <footer id="resources" className="border-t border-white/10 bg-brand-dark py-12 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1">
@@ -1000,12 +1027,11 @@ const App: React.FC = () => {
           © {new Date().getFullYear()} FORZEO INC. ALL RIGHTS RESERVED.
         </div>
       </footer>
-
-      {/* Modals */}
       <LeadFormModal 
         isOpen={isAuditModalOpen} 
         onClose={() => setIsAuditModalOpen(false)} 
       />
+      <WhatsAppButton />
     </div>
   );
 };
