@@ -7,19 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules/
-dist/
-dist-ssr/
-.vite/
-.cache/
-
-# Local env files (do NOT commit secrets) - keep .env.example tracked
-.env.local
-.env.*.local
-.env
-!.env.example
-
-# other *.local files
+node_modules
+dist
+dist-ssr
 *.local
 
 # Editor directories and files
@@ -32,13 +22,3 @@ dist-ssr/
 *.njsproj
 *.sln
 *.sw?
-
-# Coverage and test output
-coverage/
-
-# Server node_modules (if present)
-server/node_modules/
-
-# Misc
-.parcel-cache/
-
