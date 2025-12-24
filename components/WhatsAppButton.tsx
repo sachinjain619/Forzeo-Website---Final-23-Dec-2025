@@ -3,7 +3,7 @@ import React from 'react';
 
 export const WhatsAppButton: React.FC = () => {
   // Replace with actual phone number in international format (e.g., 15551234567)
-  const phoneNumber = "9908902060"; 
+  const phoneNumber = "+919908902060"; 
   const message = "Hi! How do I learn more about my brands AI Search Visibility?";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
