@@ -1,30 +1,28 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  ArrowRight, 
-  CheckCircle, 
-  Menu, 
-  X, 
-  Cpu, 
-  Globe, 
+import {
+  ArrowRight,
+  CheckCircle,
+  Menu,
+  X,
+  Cpu,
+  Globe,
   ChevronLeft,
-  ChevronRight, 
-  TrendingUp, 
-  Zap, 
-  Activity, 
-  Quote, 
-  Users, 
-  Layers, 
-  MessageSquare, 
-  TrendingDown, 
-  LayoutDashboard, 
-  Settings, 
-  LogOut, 
+  ChevronRight,
+  TrendingUp,
+  Zap,
+  Activity,
+  Quote,
+  Users,
+  Layers,
+  MessageSquare,
+  TrendingDown,
+  LayoutDashboard,
+  Settings,
+  LogOut,
   Info,
   ShieldCheck,
-  Loader2,
-  Lock,
-  Shield
+  Loader2
 } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { Button } from './components/Button';
@@ -61,96 +59,6 @@ const TESTIMONIALS = [
     color: "from-amber-400 to-orange-500"
   }
 ];
-
-// --- Verification Gateway Component ---
-const VerificationGateway: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-
-  const handleVerify = () => {
-    setIsVerifying(true);
-    // Simulate a futuristic scan
-    setTimeout(() => {
-      setIsComplete(true);
-      setTimeout(onVerified, 800);
-    }, 1500);
-  };
-
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-brand-dark overflow-hidden">
-      <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-brand-indigo/10 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="relative z-10 glass-panel p-10 md:p-14 rounded-[2.5rem] border border-white/10 flex flex-col items-center gap-8 max-w-md w-full mx-6 text-center shadow-2xl animate-fade-in-up">
-        <Logo className="scale-125 mb-4" />
-        
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-indigo/10 border border-brand-indigo/30 text-brand-cyan text-[10px] font-bold uppercase tracking-widest">
-            <Shield size={14} />
-            Secure Gateway
-          </div>
-         
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Verify you are human.
-          </p>
-        </div>
-
-        <button 
-          onClick={handleVerify}
-          disabled={isVerifying}
-          className={`relative group w-full p-6 rounded-2xl border transition-all duration-500 flex items-center justify-between overflow-hidden ${
-            isComplete 
-              ? 'bg-emerald-500/10 border-emerald-500/50' 
-              : 'bg-white/5 border-white/10 hover:border-brand-cyan/50 hover:bg-white/10'
-          }`}
-        >
-          {/* Progress bar background */}
-          {isVerifying && !isComplete && (
-            <div className="absolute bottom-0 left-0 h-1 bg-brand-cyan animate-progress" style={{ width: '100%' }} />
-          )}
-
-          <div className="flex items-center gap-4">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-500 ${
-              isComplete 
-                ? 'bg-emerald-500 border-emerald-500 scale-110' 
-                : 'border-white/20 group-hover:border-brand-cyan'
-            }`}>
-              {isComplete ? (
-                <CheckCircle size={20} className="text-white" />
-              ) : isVerifying ? (
-                <Loader2 size={16} className="text-brand-cyan animate-spin" />
-              ) : (
-                <div className="w-2 h-2 rounded-sm bg-white/20 group-hover:bg-brand-cyan transition-colors" />
-              )}
-            </div>
-            <span className={`text-sm font-bold uppercase tracking-widest transition-colors ${isComplete ? 'text-emerald-400' : 'text-slate-400 group-hover:text-white'}`}>
-              {isComplete ? 'Verified' : isVerifying ? 'Verifying...' : 'I am human'}
-            </span>
-          </div>
-          
-          <Lock size={18} className={`transition-opacity duration-300 ${isVerifying ? 'opacity-0' : 'opacity-20'}`} />
-        </button>
-
-        <div className="flex items-center gap-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-40">
-          
-        forzeo.com needs to review the security of your connection before proceeding.
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes progress {
-          from { transform: scaleX(0); transform-origin: left; }
-          to { transform: scaleX(1); transform-origin: left; }
-        }
-        .animate-progress {
-          animation: progress 1.5s linear forwards;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-// --- Rest of the Components ---
 
 const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
@@ -222,12 +130,12 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div 
+      <div
         className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm transition-opacity duration-300"
         onClick={resetAndClose}
       />
       <div className="relative w-full max-w-lg glass-panel rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0F172A] animate-fade-in-up">
-        <button 
+        <button
           onClick={resetAndClose}
           className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors"
         >
@@ -250,39 +158,39 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
-                    <input 
+                    <input
                       required
                       type="text"
                       placeholder="Jane Doe"
                       className="w-full bg-[#1A2235]/60 border border-white/5 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                       value={formData.fullName}
-                      onChange={e => setFormData({...formData, fullName: e.target.value})}
+                      onChange={e => setFormData({ ...formData, fullName: e.target.value })}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Work Email</label>
-                    <input 
+                    <input
                       required
                       type="email"
                       placeholder="jane@brand.com"
                       className="w-full bg-[#1A2235]/60 border border-white/5 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                       value={formData.workEmail}
-                      onChange={e => setFormData({...formData, workEmail: e.target.value})}
+                      onChange={e => setFormData({ ...formData, workEmail: e.target.value })}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Website URL</label>
-                    <input 
+                    <input
                       required
                       type="text"
                       placeholder="https://brand.com"
                       className="w-full bg-[#1A2235]/60 border border-blue-500/40 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/30 transition-all"
                       value={formData.websiteUrl}
-                      onChange={e => setFormData({...formData, websiteUrl: e.target.value})}
+                      onChange={e => setFormData({ ...formData, websiteUrl: e.target.value })}
                     />
                   </div>
                 </div>
-                <Button 
+                <Button
                   type="submit"
                   className="w-full bg-[#3B82F6] hover:bg-blue-600 text-white font-bold py-4 rounded-xl border-none shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
@@ -302,32 +210,32 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Top 3 Competitors</label>
-                    <textarea 
+                    <textarea
                       required
                       placeholder="Who should we benchmark you against?"
                       rows={2}
                       className="w-full bg-[#1A2235]/60 border border-white/5 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none"
                       value={formData.competitors}
-                      onChange={e => setFormData({...formData, competitors: e.target.value})}
+                      onChange={e => setFormData({ ...formData, competitors: e.target.value })}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Primary Target Query</label>
-                    <input 
+                    <input
                       required
                       type="text"
                       placeholder="e.g. 'Best enterprise SEO tools'"
                       className="w-full bg-[#1A2235]/60 border border-white/5 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                       value={formData.primaryQuery}
-                      onChange={e => setFormData({...formData, primaryQuery: e.target.value})}
+                      onChange={e => setFormData({ ...formData, primaryQuery: e.target.value })}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Target Region</label>
-                    <select 
+                    <select
                       className="w-full bg-[#1E293B] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-blue-500 transition-all cursor-pointer"
                       value={formData.targetRegion}
-                      onChange={e => setFormData({...formData, targetRegion: e.target.value})}
+                      onChange={e => setFormData({ ...formData, targetRegion: e.target.value })}
                     >
                       <option value="US">United States</option>
                       <option value="India">India</option>
@@ -337,14 +245,14 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setStep(1)}
                     className="px-6 rounded-xl border border-white/10 text-slate-400 hover:text-white transition-colors"
                   >
                     Back
                   </button>
-                  <Button 
+                  <Button
                     type="submit"
                     disabled={isSubmitting}
                     className="flex-1 bg-[#3B82F6] hover:bg-blue-600 text-white font-bold py-4 rounded-xl border-none shadow-lg shadow-blue-500/30 relative group overflow-hidden"
@@ -363,8 +271,8 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
         ) : (
           <div className="p-10 text-center space-y-8 animate-fade-in">
             <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-500/10 border border-blue-500/20">
-               <Cpu className="text-blue-500 animate-pulse" size={32} />
-               <div className="absolute inset-0 rounded-full border-2 border-blue-500/50 border-t-transparent animate-spin" />
+              <Cpu className="text-blue-500 animate-pulse" size={32} />
+              <div className="absolute inset-0 rounded-full border-2 border-blue-500/50 border-t-transparent animate-spin" />
             </div>
             <div className="space-y-4">
               <h2 className="text-3xl font-display font-bold text-white">Analysis Started!</h2>
@@ -374,7 +282,7 @@ const LeadFormModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
               <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden mb-8">
                 <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-full w-[85%] animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
               </div>
-              <Button 
+              <Button
                 onClick={resetAndClose}
                 variant="outline"
                 className="w-full border-white/10 hover:border-blue-500/50 text-slate-300 rounded-xl"
@@ -418,8 +326,8 @@ const DashboardMockup: React.FC = () => {
           { label: 'BRAND SENTIMENT', val: '65/100', trend: 'Neutral', trendUp: null },
           { label: 'AVG RANK IN LISTS', val: '#6.2', trend: 'Dropping', trendUp: false },
         ].map((card, i) => (
-          <div 
-            key={i} 
+          <div
+            key={i}
             className="bg-[#121827] border border-white/5 rounded-xl p-4 transition-all duration-700 hover:border-white/10 overflow-hidden min-w-0"
             style={{ transform: animate ? 'translateY(0)' : 'translateY(10px)', opacity: animate ? 1 : 0, transitionDelay: `${i * 100}ms` }}
           >
@@ -429,10 +337,9 @@ const DashboardMockup: React.FC = () => {
             </div>
             <div className="flex flex-wrap items-baseline gap-1.5 min-w-0">
               <span className="text-lg font-display font-bold text-white whitespace-nowrap">{card.val}</span>
-              <span className={`text-[7px] px-1 py-0.5 rounded font-bold uppercase tracking-tighter whitespace-nowrap overflow-hidden text-ellipsis ${
-                card.trendUp === true ? 'bg-emerald-500/10 text-emerald-400' : 
-                card.trendUp === false ? 'bg-rose-500/10 text-rose-500' : 'bg-slate-500/10 text-slate-400'
-              }`}>
+              <span className={`text-[7px] px-1 py-0.5 rounded font-bold uppercase tracking-tighter whitespace-nowrap overflow-hidden text-ellipsis ${card.trendUp === true ? 'bg-emerald-500/10 text-emerald-400' :
+                  card.trendUp === false ? 'bg-rose-500/10 text-rose-500' : 'bg-slate-500/10 text-slate-400'
+                }`}>
                 {card.trend}
               </span>
             </div>
@@ -457,10 +364,10 @@ const DashboardMockup: React.FC = () => {
             </div>
           </div>
           <div className="flex-1 relative">
-             <svg className="w-full h-full" preserveAspectRatio="none">
-                <path d="M0,80 C50,78 100,85 150,70 C200,60 250,78 300,65 C350,55 400,68 450,50" fill="none" stroke="#4F46E5" strokeWidth="2.5" className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: animate ? 0 : 1000 }} />
-                <path d="M0,40 C50,45 100,38 150,42 C200,48 250,40 300,45 C350,42 400,38 450,40" fill="none" stroke="#22D3EE" strokeWidth="1.5" strokeOpacity="0.4" />
-             </svg>
+            <svg className="w-full h-full" preserveAspectRatio="none">
+              <path d="M0,80 C50,78 100,85 150,70 C200,60 250,78 300,65 C350,55 400,68 450,50" fill="none" stroke="#4F46E5" strokeWidth="2.5" className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: animate ? 0 : 1000 }} />
+              <path d="M0,40 C50,45 100,38 150,42 C200,48 250,40 300,45 C350,42 400,38 450,40" fill="none" stroke="#22D3EE" strokeWidth="1.5" strokeOpacity="0.4" />
+            </svg>
           </div>
         </div>
         <div className="bg-[#121827] border border-white/5 rounded-xl p-5 flex flex-col items-center justify-center h-[240px] overflow-hidden"
@@ -529,20 +436,20 @@ const DashboardMockup: React.FC = () => {
             <p className="text-[9px] text-slate-500 mt-1 font-medium">Tracking share of mind vs competitors.</p>
           </div>
           <div className="space-y-4">
-             {[
-               { label: 'Total Mentions', vals: [20, 85, 60] },
-               { label: 'Share of Voice %', vals: [6, 42, 28] },
-               { label: 'Avg Rank (Inverse)', vals: [15, 90, 75] }
-             ].map((row, idx) => (
-               <div key={idx} className="space-y-2">
-                 <div className="text-[8px] text-slate-500 uppercase font-bold tracking-widest">{row.label}</div>
-                 <div className="space-y-1.5">
-                   <div className="h-2 bg-brand-indigo rounded-r shadow-[0_0_8px_rgba(79,70,229,0.3)] transition-all duration-1000" style={{ width: animate ? `${row.vals[0]}%` : '0%' }}></div>
-                   <div className="h-2 bg-slate-700 rounded-r transition-all duration-1000" style={{ width: animate ? `${row.vals[1]}%` : '0%' }}></div>
-                   <div className="h-2 bg-slate-800 rounded-r transition-all duration-1000" style={{ width: animate ? `${row.vals[2]}%` : '0%' }}></div>
-                 </div>
-               </div>
-             ))}
+            {[
+              { label: 'Total Mentions', vals: [20, 85, 60] },
+              { label: 'Share of Voice %', vals: [6, 42, 28] },
+              { label: 'Avg Rank (Inverse)', vals: [15, 90, 75] }
+            ].map((row, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="text-[8px] text-slate-500 uppercase font-bold tracking-widest">{row.label}</div>
+                <div className="space-y-1.5">
+                  <div className="h-2 bg-brand-indigo rounded-r shadow-[0_0_8px_rgba(79,70,229,0.3)] transition-all duration-1000" style={{ width: animate ? `${row.vals[0]}%` : '0%' }}></div>
+                  <div className="h-2 bg-slate-700 rounded-r transition-all duration-1000" style={{ width: animate ? `${row.vals[1]}%` : '0%' }}></div>
+                  <div className="h-2 bg-slate-800 rounded-r transition-all duration-1000" style={{ width: animate ? `${row.vals[2]}%` : '0%' }}></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div className="bg-[#121827] border border-white/5 rounded-xl p-5 overflow-hidden"
@@ -614,12 +521,11 @@ const DashboardMockup: React.FC = () => {
       <div className="w-48 border-r border-white/5 bg-[#0D121F] p-4 hidden md:flex flex-col">
         <div className="flex-1 flex flex-col gap-1">
           {sidebarItems.map((item, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               onClick={() => setActiveTab(item.label)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
-                activeTab === item.label ? 'bg-brand-indigo/20 text-white shadow-[0_0_15px_rgba(79,70,229,0.2)]' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5 cursor-pointer'
-              }`}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${activeTab === item.label ? 'bg-brand-indigo/20 text-white shadow-[0_0_15px_rgba(79,70,229,0.2)]' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5 cursor-pointer'
+                }`}
             >
               <item.icon size={16} className="shrink-0" />
               <span className="text-[11px] font-bold tracking-tight uppercase tracking-widest truncate">{item.label}</span>
@@ -630,8 +536,8 @@ const DashboardMockup: React.FC = () => {
           <div className="flex items-center gap-3 px-3 py-2.5 bg-white/2 rounded-xl mb-3 border border-white/5 overflow-hidden">
             <div className="w-8 h-8 rounded-full bg-brand-indigo flex items-center justify-center text-[10px] font-bold text-white shrink-0 shadow-lg border border-white/10">AD</div>
             <div className="flex flex-col min-w-0">
-               <span className="text-[10px] text-white font-bold truncate">Admin User</span>
-               <span className="text-[8px] text-slate-500 truncate uppercase font-bold tracking-tighter">Enterprise</span>
+              <span className="text-[10px] text-white font-bold truncate">Admin User</span>
+              <span className="text-[8px] text-slate-500 truncate uppercase font-bold tracking-tighter">Enterprise</span>
             </div>
           </div>
           <div className="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-200 cursor-pointer rounded-lg transition-colors group overflow-hidden">
@@ -674,7 +580,6 @@ const DashboardMockup: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [isVerified, setIsVerified] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -720,10 +625,6 @@ const App: React.FC = () => {
     setIsAuditModalOpen(true);
   };
 
-  if (!isVerified) {
-    return <VerificationGateway onVerified={() => setIsVerified(true)} />;
-  }
-
   return (
     <div className="min-h-screen bg-brand-dark text-slate-300 font-sans selection:bg-brand-cyan/30 selection:text-white relative animate-fade-in">
       <style>{`
@@ -745,20 +646,19 @@ const App: React.FC = () => {
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-hero-glow pointer-events-none z-0" />
       <div className="fixed top-10 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-white/5 blur-[120px] rounded-full pointer-events-none z-0 mix-blend-soft-light" />
       <div className="fixed -top-24 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none z-0 mix-blend-screen" />
-      <nav 
-        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-          isScrolled 
-            ? 'bg-brand-dark/80 backdrop-blur-md border-white/10 py-4' 
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled
+            ? 'bg-brand-dark/80 backdrop-blur-md border-white/10 py-4'
             : 'bg-transparent border-transparent py-6'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Logo />
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map(link => (
-              <a 
-                key={link.label} 
-                href={link.href} 
+              <a
+                key={link.label}
+                href={link.href}
                 onClick={(e) => scrollToSection(e, link.href)}
                 className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
               >
@@ -769,7 +669,7 @@ const App: React.FC = () => {
               Get Started
             </Button>
           </div>
-          <button 
+          <button
             className="md:hidden text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -779,8 +679,8 @@ const App: React.FC = () => {
         {isMobileMenuOpen && (
           <div className="absolute top-full left-0 w-full bg-brand-dark border-b border-white/10 p-6 flex flex-col gap-4 md:hidden">
             {NAV_LINKS.map(link => (
-              <a 
-                key={link.label} 
+              <a
+                key={link.label}
                 href={link.href}
                 className="text-lg font-medium text-slate-300"
                 onClick={(e) => scrollToSection(e, link.href)}
@@ -810,17 +710,17 @@ const App: React.FC = () => {
               Unlock visibility across ChatGPT, Gemini, and Perplexity—and get precise strategies to dominate every generated answer.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Button 
-                variant="secondary" 
-                size="lg" 
+              <Button
+                variant="secondary"
+                size="lg"
                 className="group shadow-[0_0_20px_rgba(34,211,238,0.3)] bg-brand-cyan border-none text-brand-dark rounded-xl"
                 icon={<ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
                 onClick={openAuditModal}
               >
                 Request a Free Audit
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
                 className="border-slate-700 hover:border-slate-300 text-slate-300 rounded-xl"
                 onClick={handleBookStrategyCall}
@@ -858,7 +758,7 @@ const App: React.FC = () => {
               Traditional SEO
             </h3>
             <ul className="space-y-4 text-slate-400">
-              {[ 'Optimizes for 10 blue links', 'Relies on static keywords', 'Losing traffic to zero-click' ].map(item => (
+              {['Optimizes for 10 blue links', 'Relies on static keywords', 'Losing traffic to zero-click'].map(item => (
                 <li key={item} className="flex items-start gap-3">
                   <X className="text-red-500/60 shrink-0 mt-1" size={16} />
                   <span>{item}</span>
@@ -872,7 +772,7 @@ const App: React.FC = () => {
               Generative Optimization (GEO)
             </h3>
             <ul className="space-y-4 text-slate-300">
-              {[ 'Optimizes for AI Chat & LLMs', 'Focuses on Entity Authority', 'Dominates AI recommended sets' ].map(item => (
+              {['Optimizes for AI Chat & LLMs', 'Focuses on Entity Authority', 'Dominates AI recommended sets'].map(item => (
                 <li key={item} className="flex items-start gap-3">
                   <CheckCircle className="text-brand-cyan shrink-0 mt-1" size={16} />
                   <span>{item}</span>
@@ -885,14 +785,14 @@ const App: React.FC = () => {
       <Section id="features">
         <div className="mb-16">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
-            Everything you need <br/>
+            Everything you need <br />
             to own the <span className="text-gradient">AI Response.</span>
           </h2>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {CORE_FEATURES.map((feature, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="p-6 rounded-xl bg-brand-surface border border-white/5 hover:border-brand-indigo/50 transition-all duration-300 hover:-translate-y-1 group"
             >
               <div className="w-12 h-12 rounded-lg bg-brand-indigo/10 flex items-center justify-center text-brand-indigo mb-6 group-hover:bg-brand-indigo group-hover:text-white transition-colors shadow-inner">
@@ -924,7 +824,7 @@ const App: React.FC = () => {
                     <div className="flex flex-col items-center gap-4">
                       <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${t.color} p-0.5 shadow-lg`}>
                         <div className="w-full h-full rounded-full bg-brand-dark flex items-center justify-center overflow-hidden">
-                           <span className="text-white font-display font-bold text-xl">{t.author.charAt(0)}</span>
+                          <span className="text-white font-display font-bold text-xl">{t.author.charAt(0)}</span>
                         </div>
                       </div>
                       <div className="text-center">
@@ -975,21 +875,21 @@ const App: React.FC = () => {
         <div className="absolute inset-0 bg-brand-indigo/10 blur-[120px] rounded-full opacity-50" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8">
-            Your Customers Ask AI Every Day. <br/>
+            Your Customers Ask AI Every Day. <br />
             <span className="text-brand-cyan shadow-sm">Make Sure It Recommends You.</span>
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button 
-              variant="primary" 
-              size="lg" 
+            <Button
+              variant="primary"
+              size="lg"
               className="w-full sm:w-auto shadow-2xl rounded-xl"
               onClick={openAuditModal}
             >
               Request a Free AI Visibility Audit
             </Button>
-            <Button 
-              variant="ghost" 
-              size="lg" 
+            <Button
+              variant="ghost"
+              size="lg"
               className="w-full sm:w-auto border border-white/10 rounded-xl"
               onClick={handleBookStrategyCall}
             >
@@ -1011,13 +911,13 @@ const App: React.FC = () => {
             </ul>
           </div>
           <div>
-             <h4 className="text-white font-bold mb-4 tracking-tight">Resources</h4>
+            <h4 className="text-white font-bold mb-4 tracking-tight">Resources</h4>
             <ul className="space-y-2 text-sm text-slate-400">
               {['GEO Guide', 'Case Studies', 'API Documentation'].map(l => <li key={l}><a href="#" className="hover:text-brand-cyan transition-colors">{l}</a></li>)}
             </ul>
           </div>
           <div>
-             <h4 className="text-white font-bold mb-4 tracking-tight">Legal</h4>
+            <h4 className="text-white font-bold mb-4 tracking-tight">Legal</h4>
             <ul className="space-y-2 text-sm text-slate-400">
               {['Privacy Policy', 'Terms of Service'].map(l => <li key={l}><a href="#" className="hover:text-brand-cyan transition-colors">{l}</a></li>)}
             </ul>
@@ -1027,9 +927,9 @@ const App: React.FC = () => {
           © {new Date().getFullYear()} FORZEO INC. ALL RIGHTS RESERVED.
         </div>
       </footer>
-      <LeadFormModal 
-        isOpen={isAuditModalOpen} 
-        onClose={() => setIsAuditModalOpen(false)} 
+      <LeadFormModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
       />
       <WhatsAppButton />
     </div>
