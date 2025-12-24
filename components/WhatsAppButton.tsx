@@ -24,7 +24,7 @@ export const WhatsAppButton: React.FC = () => {
       </svg>
       
       {/* Tooltip */}
-      <span className="absolute left-full ml-4 px-3 py-1 bg-white text-brand-dark text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap shadow-xl border border-white/10">
+      <span className="absolute right-full ml-4 px-3 py-1 bg-white text-brand-dark text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap shadow-xl border border-white/10">
         Chat with us
       </span>
     </a>
